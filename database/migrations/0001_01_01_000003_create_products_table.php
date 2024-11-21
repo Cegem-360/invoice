@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('sku')->unique();
             $table->boolean('price_group_gross')->default(0);
-            $table->decimal('price_group_price', 10, 2)->default(0);
+            $table->integer('price_group_price')->default(0);
             $table->timestamps();
         });
     }
