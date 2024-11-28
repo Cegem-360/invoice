@@ -47,7 +47,7 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('nev')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('sku')
@@ -57,6 +57,7 @@ class ProductResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('price')
+                    ->label('Netto ár')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')
