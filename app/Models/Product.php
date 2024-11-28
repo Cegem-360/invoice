@@ -12,9 +12,9 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'name',
+        'nev',
         'sku',
-        'price_group_gross',
-        'price_group_price',
+        'ean',
+        'price',
     ];
 }

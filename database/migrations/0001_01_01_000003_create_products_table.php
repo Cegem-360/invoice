@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('sku')->unique();
-            $table->boolean('price_group_gross')->default(0);
-            $table->integer('price_group_price')->default(0);
+            $table->string('nev')->nullable();
+            $table->string('sku')->nullable();
+            $table->string('ean')->nullable();
+            $table->string('price')->nullable();
             $table->timestamps();
         });
     }

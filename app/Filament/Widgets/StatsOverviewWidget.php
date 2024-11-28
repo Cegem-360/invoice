@@ -2,8 +2,10 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Product;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
+use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Database\Eloquent\Collection;
 
 class StatsOverviewWidget extends BaseWidget
 {
@@ -11,22 +13,63 @@ class StatsOverviewWidget extends BaseWidget
 
     protected function getCards(): array
     {
+        $products = Product::all();
+        $newProducts = $this->getNewProducts();
+        $newProductsCount = $newProducts->count();
+        $newProductsChartData = $this->getChartData($newProducts);
+
+        $updatedProducts = $this->getUpdatedProducts();
+        $updatedProductsCount = $updatedProducts->count();
+        $updatedProductsChartData = $this->getChartData($updatedProducts);
+
         return [
-            Card::make('Revenue', '$192.1k')
-                ->description('32k increase')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->chart([7, 2, 10, 3, 15, 4, 17])
-                ->color('success'),
-            Card::make('New customers', '1340')
-                ->description('3% decrease')
-                ->descriptionIcon('heroicon-m-arrow-trending-down')
-                ->chart([17, 16, 14, 15, 14, 13, 12])
-                ->color('danger'),
-            Card::make('New orders', '3543')
-                ->description('7% increase')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->chart([15, 4, 10, 2, 12, 4, 12])
-                ->color('success'),
+            Stat::make(__('Összes Termék'), $products->count())
+                ->description('Összes termék darabszáma')
+                ->chart([1, 1, 1, 1, 1, 1, 1, 1]),
+            Stat::make(__('Új termékek az elmult 24 órában'), $newProductsCount)
+                ->description(__('Az elmult 24 órában hozzáadott termékek darabszáma'))
+                ->chart($newProductsChartData)
+                ->color('info'),
+            Stat::make(__('Frissített termékek az elmult 24 órában'), $updatedProductsCount)
+                ->description(__('Az elmult 24 órában frissített termékek darabszáma'))
+                ->chart($updatedProductsChartData)
+                ->color('info'),
         ];
+    }
+
+    protected function getNewProducts(): Collection
+    {
+        return Product::where('created_at', '>=', now()->subDay())->get();
+    }
+
+    protected function getUpdatedProducts(): Collection
+    {
+        return Product::where('updated_at', '>=', now()->subDay())->get();
+    }
+
+    protected function getChartData($products): array
+    {
+        $productsLastTwentyFourHours = $products->groupBy(function ($product) {
+            $hour = $product->created_at->hour;
+            $group = intdiv($hour, 4) * 4;
+
+            return $product->created_at->format('Y-m-d').' '.str_pad($group, 2, '0', STR_PAD_LEFT).':00:00';
+        });
+
+        $productsGrouped = $productsLastTwentyFourHours->map(function ($group) {
+            return $group->count();
+        })->toArray();
+
+        $chartData = array_fill(0, 6, 0);
+        foreach ($productsGrouped as $key => $count) {
+            $hour = (int) substr($key, 11, 2);
+            $index = intdiv($hour, 4);
+            $chartData[$index] = $count;
+        }
+
+        $currentHour = now()->hour;
+        $currentIndex = intdiv($currentHour, 4);
+
+        return array_merge(array_slice($chartData, $currentIndex + 1), array_slice($chartData, 0, $currentIndex + 1));
     }
 }
