@@ -7,14 +7,12 @@ use App\Filament\Resources\ProductResource\Pages\EditProduct;
 use App\Filament\Resources\ProductResource\Pages\ListProducts;
 use App\Models\Product;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class ProductResource extends Resource
@@ -29,15 +27,17 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->label(__('Name'))
+                TextInput::make('nev')->label(__('Név'))
                     ->required(),
                 TextInput::make('sku')
                     ->label('SKU')
-                    ->required(),
-                Toggle::make('price_group_gross')->label('Brutto/netto')
-                    ->required(),
-                TextInput::make('price_group_price')
-                    ->required()
+                    ->required(false),
+                TextInput::make('ean')
+                    ->label('EAN')
+                    ->required(false),
+                TextInput::make('price')
+                    ->label('Netto ár')
+                    ->required(false)
                     ->numeric()
                     ->default(0),
             ]);
@@ -51,11 +51,14 @@ class ProductResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('sku')
-                    ->label('SKU')
+                    ->sortable()
                     ->searchable(),
-                ToggleColumn::make('price_group_gross')->label('Brutto/Netto')->sortable(),
-                TextColumn::make('price_group_price')->money('HUF', 1)
-                    ->sortable(),
+                TextColumn::make('ean')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('price')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
