@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
-
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Saloon\XmlWrangler\XmlReader;
@@ -45,7 +44,6 @@ class ProductSeeder extends Seeder
             dump('Response headers: '.json_encode($response->headers()));
         }
 
-       
     }
 
     /**
