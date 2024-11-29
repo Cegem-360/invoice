@@ -16,5 +16,9 @@ class Product extends Model
         'sku',
         'ean',
         'price',
+        'price_kivitelezok',
+        'price_kp_elore_harminc',
+        'price_kp_elore_huszonot',
+
     ];
 }

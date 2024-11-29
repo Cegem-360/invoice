@@ -10,9 +10,9 @@ Route::get('/products', function () {
     //create csv file from products
     $products = \App\Models\Product::all();
     $csv = \League\Csv\Writer::createFromFileObject(new SplTempFileObject);
-    $csv->insertOne(['nev', 'sku', 'ean', 'price']);
+    $csv->insertOne(['nev', 'sku', 'ean', 'price', 'price_kivitelezok', 'price_kp_elore_harminc', 'price_kp_elore_huszonot']);
     foreach ($products as $product) {
-        $csv->insertOne([$product->nev, $product->sku, $product->ean, $product->price]);
+        $csv->insertOne([$product->nev, $product->sku, $product->ean, $product->price, $product->price_kivitelezok, $product->price_kp_elore_harminc, $product->price_kp_elore_huszonot]);
     }
     $csv->download('products.csv');
 

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Saloon\XmlWrangler\XmlReader;
@@ -24,14 +25,18 @@ class ProductSeeder extends Seeder
             $reader = XmlReader::fromString($xml);
             $products = $reader->values()['response']['product'];
             $product = $reader->values()['response']['product'][0];
-            /*  dump($product);
-             dump($product['Arak']); */
+
+            dump($product);
+            dump($product['Arak']);
             foreach ($products as $product) {
                 Product::create([
                     'nev' => $this->clear_string($product['Nev']),
                     'sku' => $this->clear_string($product['CikkSzam']),
                     'ean' => $this->clear_string($product['EAN']),
                     'price' => $this->clear_string($product['Arak'][0]['Arcsoport_Ar']),
+                    'price_kivitelezok' => $this->clear_string($product['Arak'][6]['Arcsoport_Ar']),
+                    'price_kp_elore_harminc' => $this->clear_string($product['Arak'][4]['Arcsoport_Ar']),
+                    'price_kp_elore_huszonot' => $this->clear_string($product['Arak'][3]['Arcsoport_Ar']),
                 ]);
             }
         } else {
@@ -39,6 +44,8 @@ class ProductSeeder extends Seeder
             dump('Response body: '.$response->body());
             dump('Response headers: '.json_encode($response->headers()));
         }
+
+       
     }
 
     /**

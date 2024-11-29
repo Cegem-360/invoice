@@ -40,6 +40,21 @@ class ProductResource extends Resource
                     ->required(false)
                     ->numeric()
                     ->default(0),
+                TextInput::make('price_kivitelezok')
+                    ->label('Kivitelezői ár')
+                    ->required(false)
+                    ->numeric()
+                    ->default(0),
+                TextInput::make('price_kp_elore_harminc')
+                    ->label('Készpénz előre 30 %')
+                    ->required(false)
+                    ->numeric()
+                    ->default(0),
+                TextInput::make('price_kp_elore_huszonot')
+                    ->label('Készpénz előre 25 %')
+                    ->required(false)
+                    ->numeric()
+                    ->default(0),
             ]);
     }
 
@@ -58,6 +73,16 @@ class ProductResource extends Resource
                     ->searchable(),
                 TextColumn::make('price')
                     ->label('Netto ár')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('price_kivitelezok')
+                    ->label('Kivitelezői ár')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('price_kp_elore_harminc')->label('Készpénz előre 30 %')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('price_kp_elore_huszonot')->label('Készpénz előre 25 %')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')

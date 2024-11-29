@@ -16,7 +16,10 @@ return new class extends Migration
             $table->string('nev')->nullable();
             $table->string('sku')->nullable();
             $table->string('ean')->nullable();
-            $table->string('price')->nullable();
+            $table->string('price')->nullable(); //listaár
+            $table->string('price_kivitelezok')->nullable(); //kivitelezői ár
+            $table->string('price_kp_elore_harminc')->nullable(); //készpénz előre 30 %
+            $table->string('price_kp_elore_huszonot')->nullable(); //készpénz előre 25 %
             $table->timestamps();
         });
     }
