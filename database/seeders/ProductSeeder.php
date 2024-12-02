@@ -25,8 +25,8 @@ class ProductSeeder extends Seeder
             $products = $reader->values()['response']['product'];
             $product = $reader->values()['response']['product'][0];
 
-            dump($product);
-            dump($product['Arak']);
+            //dump($product);
+            //dump($product['Arak']);
             foreach ($products as $product) {
                 Product::create([
                     'nev' => $this->clear_string($product['Nev']),
