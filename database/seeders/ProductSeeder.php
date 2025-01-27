@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
+use App\Models\WoocommerceProduct;
+use Automattic\WooCommerce\Client;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Saloon\XmlWrangler\XmlReader;
@@ -25,8 +27,8 @@ class ProductSeeder extends Seeder
             $products = $reader->values()['response']['product'];
             $product = $reader->values()['response']['product'][0];
 
-            //dump($product);
-            //dump($product['Arak']);
+            // dump($product);
+            // dump($product['Arak']);
             foreach ($products as $product) {
                 Product::create([
                     'nev' => $this->clear_string($product['Nev']),
@@ -38,6 +40,43 @@ class ProductSeeder extends Seeder
                     'price_kp_elore_huszonot' => $this->clear_string($product['Arak'][3]['Arcsoport_Ar']),
                 ]);
             }
+            $woocommerce = new Client(
+                'http://rodelux.hu',
+                'ck_77f062e6c6b0bf7e352e813d15d0dd6f469213ff',
+                'cs_b063aae48e96abb2ae11906db921013bd5b7cfcd',
+                [
+                    'version' => 'wc/v3',
+                ]
+
+            );
+            // 1700 product
+            $total_products = $woocommerce->get('products/count')->count;
+            $pages = ceil($total_products / 100);
+            for ($i = 1; $i <= $pages; $i++) {
+                $woocommerce_products = $woocommerce->get('products', ['per_page' => 100, 'page' => $i]);
+                foreach ($woocommerce_products as $product) {
+                    $product = WoocommerceProduct::create([
+                        'wordpress_id' => $product->id,
+                        'name' => $product->name,
+                        'sku' => $product->sku,
+                    ]);
+                }
+            }
+            foreach (WoocommerceProduct::all() as $product) {
+                $woocommerce_products = $woocommerce->get('products/'.$product->wordpress_id.'/variations', ['per_page' => 50]);
+                foreach ($woocommerce_products as $variation) {
+                    $product_inner = Product::whereSku($variation->sku)->first();
+                    $product->woocommerceProductVariation()->create([
+                        'wordpress_id' => $variation->id,
+                        'product_id' => $product_inner ? $product_inner->id : null,
+                        'name' => $variation->name,
+                        'sku' => $variation->sku,
+                    ]);
+                }
+            }
+
+            // $woocommerce_products = $woocommerce->get('products', ['per_page' => 100]);
+
         } else {
             dump('GET request failed: '.$response->status());
             dump('Response body: '.$response->body());

@@ -11,7 +11,7 @@ class StatsOverviewWidget extends BaseWidget
 {
     protected static ?int $sort = 0;
 
-    protected function getCards(): array
+    protected function getStats(): array
     {
         $products = Product::all();
         $newProducts = $this->getNewProducts();
@@ -53,7 +53,7 @@ class StatsOverviewWidget extends BaseWidget
             $hour = $product->created_at->hour;
             $group = intdiv($hour, 4) * 4;
 
-            return $product->created_at->format('Y-m-d').' '.str_pad($group, 2, '0', STR_PAD_LEFT).':00:00';
+            return $product->created_at->format('Y-m-d').' '.str_pad((string) $group, 2, '0', STR_PAD_LEFT).':00:00';
         });
 
         $productsGrouped = $productsLastTwentyFourHours->map(function ($group) {

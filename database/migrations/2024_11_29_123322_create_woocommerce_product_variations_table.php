@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Product;
 use App\Models\WoocommerceProduct;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,7 +18,8 @@ return new class extends Migration
             $table->string('wordpress_id')->nullable();
             $table->string('name')->nullable();
             $table->string('sku')->nullable();
-            $table->foreignIdFor(WoocommerceProduct::class);
+            $table->foreignIdFor(WoocommerceProduct::class)->nullable();
+            $table->foreignIdFor(Product::class)->nullable();
             $table->timestamps();
         });
     }

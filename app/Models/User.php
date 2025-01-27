@@ -15,9 +15,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     use HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * fillable
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $fillable = [
         'name',
@@ -28,7 +28,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var array<int, string>
+     * @var list<string>
      */
     protected $hidden = [
         'password',
@@ -36,9 +36,9 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Get the casts array for the model.
      *
-     * @return array<string, string>
+     * @return array <string, string>
      */
     protected function casts(): array
     {
