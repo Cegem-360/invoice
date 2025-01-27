@@ -20,4 +20,4 @@ Route::get('/products', function () {
 
     // return response()->download(storage_path('app/products.csv'));
 });
-// require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';
