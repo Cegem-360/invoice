@@ -41,7 +41,7 @@ class ProductSeeder extends Seeder
                 ]);
             }
             $woocommerce = new Client(
-                'http://rodelux.hu',
+                'https://rodelux.hu',
                 'ck_77f062e6c6b0bf7e352e813d15d0dd6f469213ff',
                 'cs_b063aae48e96abb2ae11906db921013bd5b7cfcd',
                 [
