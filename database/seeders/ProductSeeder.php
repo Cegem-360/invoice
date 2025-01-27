@@ -75,6 +75,13 @@ class ProductSeeder extends Seeder
                 }
             }
 
+            /*  foreach (Product::wherehas('woocomerceProductVariation')->get() as $product) {
+                 $woocommerce->put('products/'.$product->wordpress_id, [
+                     'regular_price' => $product->price,
+                     'sale_price' => $product->price_kp_elore_huszonot,
+                 ]);
+             } */
+
             // $woocommerce_products = $woocommerce->get('products', ['per_page' => 100]);
 
         } else {
