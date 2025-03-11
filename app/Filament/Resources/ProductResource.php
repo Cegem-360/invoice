@@ -2,24 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ProductResource\Pages\CreateProduct;
-use App\Filament\Resources\ProductResource\Pages\EditProduct;
-use App\Filament\Resources\ProductResource\Pages\ListProducts;
+use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Tables;
 use Filament\Tables\Table;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
-
-    protected static ?string $navigationGroup = 'Shop';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -52,7 +45,8 @@ class ProductResource extends Resource
                     ->default(0),
                 TextInput::make('price_kp_elore_huszonot')
                     ->label('Készpénz előre 25 %')
-                    ->required(false)
+                    ->required(false),
+                TextInput::make('storage')
                     ->numeric()
                     ->default(0),
             ]);
@@ -62,47 +56,42 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('nev')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('nev')
                     ->searchable(),
-                TextColumn::make('sku')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('sku')
+                    ->label('SKU')
                     ->searchable(),
-                TextColumn::make('ean')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('ean')
                     ->searchable(),
-                TextColumn::make('price')
-                    ->label('Netto ár')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('price')
                     ->searchable(),
-                TextColumn::make('price_kivitelezok')
-                    ->label('Kivitelezői ár')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('price_kivitelezok')
                     ->searchable(),
-                TextColumn::make('price_kp_elore_harminc')->label('Készpénz előre 30 %')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('price_kp_elore_harminc')
                     ->searchable(),
-                TextColumn::make('price_kp_elore_huszonot')->label('Készpénz előre 25 %')
-                    ->sortable()
+                Tables\Columns\TextColumn::make('price_kp_elore_huszonot')
                     ->searchable(),
-                TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('storage')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: false),
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                EditAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -117,9 +106,9 @@ class ProductResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListProducts::route('/'),
-            'create' => CreateProduct::route('/create'),
-            'edit' => EditProduct::route('/{record}/edit'),
+            'index' => Pages\ListProducts::route('/'),
+            'create' => Pages\CreateProduct::route('/create'),
+            'edit' => Pages\EditProduct::route('/{record}/edit'),
         ];
     }
 }

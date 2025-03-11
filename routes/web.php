@@ -11,10 +11,10 @@ Route::get('/products', function () {
     // create csv file from products
     $products = Product::wherehas('woocomerceProductVariation')->get();
     $csv = \League\Csv\Writer::createFromFileObject(new SplTempFileObject);
-    $csv->insertOne(['nev', 'sku', 'group_id', 'ean', 'price', 'price_kivitelezok', 'price_kp_elore_harminc', 'price_kp_elore_huszonot']);
+    $csv->insertOne(['nev', 'sku', 'group_id', 'ean', 'price', 'price_kivitelezok', 'price_kp_elore_harminc', 'price_kp_elore_huszonot', 'storage']);
     foreach ($products as $product) {
         /** @var Product $product */
-        $csv->insertOne([$product->nev, $product->sku, $product->woocomerceProductVariation()->first()->product_id, $product->ean, $product->price, $product->price_kivitelezok, $product->price_kp_elore_harminc, $product->price_kp_elore_huszonot]);
+        $csv->insertOne([$product->nev, $product->sku, $product->woocomerceProductVariation()->first()->product_id, $product->ean, $product->price, $product->price_kivitelezok, $product->price_kp_elore_harminc, $product->price_kp_elore_huszonot, $product->storage]);
     }
     $csv->download('products.csv');
 

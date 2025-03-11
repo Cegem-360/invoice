@@ -30,6 +30,7 @@ class Product extends Model
         'price_kivitelezok',
         'price_kp_elore_harminc',
         'price_kp_elore_huszonot',
+        'storage',
 
     ];
 

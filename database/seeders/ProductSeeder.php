@@ -23,6 +23,7 @@ class ProductSeeder extends Seeder
         $response = $this->httpGet('http://api.innvoice.hu/'.$regnev.'/product', $regnev, $password);
         if ($response->successful()) {
             $xml = $response->body();
+            // dump($xml);
             $reader = XmlReader::fromString($xml);
             $products = $reader->values()['response']['product'];
             $product = $reader->values()['response']['product'][0];
@@ -30,6 +31,9 @@ class ProductSeeder extends Seeder
             // dump($product);
             // dump($product['Arak']);
             foreach ($products as $product) {
+                $storage = 0;
+                $storage = (int) $product['Keszletek']['Keszlet'][0]['Raktar_Keszlet'];
+                $storage += (int) $product['Keszletek']['Keszlet'][1]['Raktar_Keszlet'];
                 Product::create([
                     'nev' => $this->clear_string($product['Nev']),
                     'sku' => $this->clear_string($product['CikkSzam']),
@@ -38,6 +42,7 @@ class ProductSeeder extends Seeder
                     'price_kivitelezok' => $this->clear_string($product['Arak'][6]['Arcsoport_Ar']),
                     'price_kp_elore_harminc' => $this->clear_string($product['Arak'][4]['Arcsoport_Ar']),
                     'price_kp_elore_huszonot' => $this->clear_string($product['Arak'][3]['Arcsoport_Ar']),
+                    'storage' => $storage,
                 ]);
             }
             $woocommerce = new Client(
